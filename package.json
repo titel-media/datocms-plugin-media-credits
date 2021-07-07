@@ -1,8 +1,8 @@
 {
-  "name": "datocms-plugin-template",
+  "name": "media-credits-plugin",
   "homepage": "https://github.com/titel-media/datocms-plugin-template",
   "version": "0.0.0",
-  "description": "PLACEHOLDER_PLUGIN_SHORT_DESCRIPTION",
+  "description": "A DatoCMS plugin which allows for the management of copyright credits for media across posts",
   "main": "index.js",
   "scripts": {
     "start": "NODE_ENV=development webpack-dev-server --port 5000",
@@ -16,7 +16,10 @@
   "keywords": [
     "datocms",
     "datocms-plugin",
-    "PLACEHOLDER_PLUGIN_KEYWORD_LIST"
+    "copyright",
+    "copyright-credit",
+    "media",
+    "credit"
   ],
   "files": [
     "dist",
@@ -25,7 +28,7 @@
   "author": "Highsnobiety <dev@highsnobiety.com>",
   "license": "MIT",
   "datoCmsPlugin": {
-    "title": "PLACEHOLDER_PLUGIN_TITLE",
+    "title": "Manage Media Credits",
     "previewImage": "docs/preview.gif",
     "coverImage": "docs/cover.png",
     "entryPoint": "dist/index.html",
