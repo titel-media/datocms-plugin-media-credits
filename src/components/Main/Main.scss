@@ -1,3 +1,13 @@
 .container {
-  // ...
+  height: 10wv;
+}
+
+.fields {
+  display: flex;
+  flex-direction: row;
+}
+
+.table-container {
+  overflow: auto;
+  max-height: 500px;
 }

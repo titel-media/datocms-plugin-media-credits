@@ -54,7 +54,15 @@
           "hint": "The plugin needs to fetch data in order to display it."
         }
       ],
-      "instance": []
+      "instance": [
+        {
+          "id": "fieldWhitelist",
+          "label": "Asset Field Whitelist",
+          "type": "string",
+          "required": false,
+          "hint": "a comma separated list of fields to search for assets"
+        }
+      ]
     }
   },
   "devDependencies": {
