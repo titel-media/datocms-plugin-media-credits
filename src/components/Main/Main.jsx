@@ -14,8 +14,17 @@ const Main = ({ client, devMode, plugin }) => {
   let [source, setSource] = useState('');
   let [name, setName] = useState('');
   let [url, setUrl] = useState('');
+  let [collection, setCollection] = useState('');
+  let [expiry, setExpiry] = useState('');
+
+  // these control whether the field is submitted depending on its checkbox
+  let [useName, setUseName] = useState(true);
+  let [useUrl, setUseUrl] = useState(true);
+  let [useCollection, setUseCollection] = useState(true);
+  let [useExpiry, setUseExpiry] = useState(true);
+
   let [imgLst, setImgLst] = useState([]);
-  let [selected, setSelected] = useState([]);
+  let [selected, setSelected] = useState({});
   let [doneLoading, setDoneLoading] = useState(false);
 
   const get_model = async (id) => {
@@ -72,6 +81,8 @@ const Main = ({ client, devMode, plugin }) => {
   };
 
   useEffect(() => {
+    setSource('Highsnobiety');
+
     async function grab_assets() {
       let img_ids = [];
       // grab all relevant media assets
@@ -102,69 +113,190 @@ const Main = ({ client, devMode, plugin }) => {
     grab_assets();
   }, []);
 
-  const handleSubmit = async () => {
-    const payload = { source, name, url };
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    let payload = { source: source };
 
-    selected.forEach(async (image, i) => {
-      console.log(`Updating image with id ${image.id}`);
-      await client.uploads.update(image.id, { ...payload });
-    });
-  };
+    if (useCollection) {
+      payload = { ...payload, collection: collection };
+    }
+    if (useName) {
+      payload = { ...payload, photographer: name };
+    }
+    if (useExpiry) {
+      payload = { ...payload, expiry: expiry };
+    }
+    if (useUrl) {
+      payload = { ...payload, url: url };
+    }
 
-  const handleChangeSource = (e) => {
-    setSource(e.target.value);
+    if (devMode) {
+      console.log('submitting the following payload');
+      console.dir(payload);
+    }
+
+    for (const img in selected) {
+      if (selected[img]) {
+        if (devMode) {
+          console.log(`updating img: ${img}`);
+        }
+
+        await client.uploads.update(img, {
+          defaultFieldMetadata: {
+            en: {
+              alt: '',
+              title: '',
+              customData: payload,
+            },
+          },
+        });
+      }
+    }
   };
 
   return (
     <div className="container">
       <form>
         <div className="fields">
-          <div onChange={handleChangeSource}>
-            <input type="radio" value="Highsnobiety" name="highsnobiety" /> Highsnobiety
-            <input type="radio" value="Getty Images" name="getty" /> Getty Images
-            <input type="radio" value="Sponsored" name="sponsored" /> Sponsored
-            <input type="radio" value="Press" name="press" /> Press
-            <input type="radio" value="Other" name="other" /> Other
+          <label>Licence Holder</label>
+          <div className="row">
+            <select
+              class="dropdown"
+              value={source}
+              onChange={(e) => {
+                setSource(e.target.value);
+              }}
+            >
+              <option value={'Highsnobiety'} href="#">
+                Highsnobiety
+              </option>
+              <option value={'Getty Images'} href="#">
+                Getty Images
+              </option>
+              <option value={'Sponsored'} href="#">
+                Sponsored
+              </option>
+              <option value={'Press'} href="#">
+                Press
+              </option>
+              <option value={'Other'} href="#">
+                Other
+              </option>
+            </select>
+            <input
+              type="text"
+              onChange={(e) => {
+                setSource(e.target.value);
+              }}
+              disabled={source !== 'Other'}
+              placeholder="Company"
+            ></input>
           </div>
 
-          <label>Photographer Name</label>
-          <input
-            type="text"
-            onChange={(e) => {
-              setName(e.target.value);
-            }}
-          ></input>
+          <label>Optional Data</label>
+          <div className="row">
+            <div className="col">
+              <div className="row">
+                <input
+                  type="checkbox"
+                  defaultChecked
+                  onChange={() => {
+                    setUseName(!useName);
+                  }}
+                ></input>
+                <input
+                  type="text"
+                  placeholder="Photographer Name"
+                  onChange={(e) => {
+                    setName(e.target.value);
+                  }}
+                ></input>
+              </div>
 
-          <label>Photographer URL</label>
-          <input
-            type="text"
-            onChange={(e) => {
-              setUrl(e.target.value);
-            }}
-          ></input>
+              <div className="row">
+                <input
+                  type="checkbox"
+                  defaultChecked
+                  onChange={() => {
+                    setUseUrl(!useUrl);
+                  }}
+                ></input>
+                <input
+                  type="text"
+                  placeholder="Photographer URL"
+                  onChange={(e) => {
+                    setUrl(e.target.value);
+                  }}
+                ></input>
+              </div>
+            </div>
 
-          <label>Collection</label>
-          <input
-            type="text"
-            onChange={(e) => {
-              setUrl(e.target.value);
-            }}
-          ></input>
+            <div className="col">
+              <div className="row">
+                <input
+                  type="checkbox"
+                  defaultChecked
+                  onChange={(e) => {
+                    setUseCollection(!useCollection);
+                  }}
+                ></input>
+                <input
+                  type="text"
+                  placeholder="Collection"
+                  onChange={(e) => {
+                    setCollection(e.target.value);
+                  }}
+                ></input>
+              </div>
 
-          <label>Expiry Date</label>
-          <input
-            type="text"
-            onChange={(e) => {
-              setUrl(e.target.value);
+              <div className="row">
+                <input
+                  type="checkbox"
+                  defaultChecked
+                  onChange={() => {
+                    setUseExpiry(!useExpiry);
+                  }}
+                ></input>
+                <input
+                  type="text"
+                  placeholder="Expiry Date"
+                  onChange={(e) => {
+                    setExpiry(e.target.value);
+                  }}
+                ></input>
+              </div>
+            </div>
+          </div>
+
+          <button
+            className="submit"
+            onClick={async (e) => {
+              e.preventDefault();
+              handleSubmit(e);
             }}
-          ></input>
+          >
+            Update
+          </button>
         </div>
+
         <div className="table-container">
           <table>
             <tbody>
               <tr>
                 <td>
-                  <input type="checkbox" />
+                  <input
+                    type="checkbox"
+                    className="table-check"
+                    disabled
+                    onChange={(e) => {
+                      imgLst.forEach((img) => {
+                        let new_selected = selected;
+                        new_selected[img.id] = e.target.checked;
+                        setSelected(new_selected);
+                        console.log(selected);
+                      });
+                    }}
+                  />
                 </td>
                 <td>Attachment</td>
                 <td>License</td>
@@ -177,15 +309,24 @@ const Main = ({ client, devMode, plugin }) => {
                 imgLst.map((elt, i) => (
                   <tr key={i}>
                     <td>
-                      <input type="checkbox" />
+                      <input
+                        type="checkbox"
+                        defaultChecked={selected[elt.id] === true}
+                        className="table-check"
+                        onChange={(e) => {
+                          let new_selected = selected;
+                          new_selected[elt.id] = e.target.checked;
+                          setSelected(new_selected);
+                        }}
+                      />
                     </td>
                     <td>
-                      <img src={elt.url} />
+                      <img src={`${elt.url}?h=100`} />
                     </td>
-                    <td>&nbsp;</td>
-                    <td>&nbsp;</td>
-                    <td>&nbsp;</td>
-                    <td>&nbsp;</td>
+                    <td>{elt.defaultFieldMetadata.en.customData?.source}</td>
+                    <td>{elt.defaultFieldMetadata.en.customData?.photographer}</td>
+                    <td>{elt.defaultFieldMetadata.en.customData?.collection}</td>
+                    <td>{elt.defaultFieldMetadata.en.customData?.expiry}</td>
                   </tr>
                 ))
               ) : (

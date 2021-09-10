@@ -4,10 +4,78 @@
 
 .fields {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
 }
 
 .table-container {
   overflow: auto;
   max-height: 500px;
+}
+
+.col {
+  display: flex;
+  flex-direction: column;
+}
+
+.row {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  margin: 5px 0 15px 0;
+  align-items: center;
+}
+
+.submit {
+  border: none;
+  width: 102px;
+  height: 40px;
+  color: #fff;
+  background: #a84bb3;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+input[type='text'] {
+  width: 100%;
+  width: 315px;
+  height: 40px;
+}
+
+.dropdown {
+  width: 343px;
+  height: 40px;
+}
+
+img {
+  width: 48px;
+  height: 48px;
+  border-radius: 50px;
+  margin: 5px 0;
+}
+
+td {
+  margin: 5px 10px 5px 5px;
+  font-size: 12px;
+}
+
+table {
+  margin: 10px 0;
+  width: 100%;
+  border-collapse: collapse;
+}
+
+tr {
+  border-bottom: 1px solid #f3f1f3;
+}
+
+option {
+  margin: 0 50px;
+}
+
+table tr:last-child {
+  border: 0;
+}
+
+tr td:first-child {
+  width: 30px;
 }
