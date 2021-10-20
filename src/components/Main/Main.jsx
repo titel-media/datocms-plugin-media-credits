@@ -161,7 +161,7 @@ const Main = ({ client, devMode, plugin }) => {
           <label>Licence Holder</label>
           <div className="row">
             <select
-              class="dropdown"
+              className="dropdown"
               value={source}
               onChange={(e) => {
                 setSource(e.target.value);
@@ -330,7 +330,7 @@ const Main = ({ client, devMode, plugin }) => {
                   </tr>
                 ))
               ) : (
-                <p>Loading...</p>
+                <div>Loading...</div>
               )}
             </tbody>
           </table>

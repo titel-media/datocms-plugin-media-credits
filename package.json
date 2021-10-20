@@ -47,7 +47,7 @@
         },
         {
           "id": "apiToken",
-          "label": "Read-Only API Token",
+          "label": "API Token",
           "type": "string",
           "required": true,
           "default": "",

@@ -50,6 +50,14 @@ PLACEHOLDER_PLUGIN_CONFIG
 }
 ```
 
+## TODO:
+
+* [ ] Documentation in README
+* [ ] Squash commits
+* [ ] Publishing notes in readme above
+  **
+* [ ] Deployment
+
 ## Development
 
 Install all the project dependencies with:
